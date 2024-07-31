@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Chatbot Customizer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+      touch-action: manipulation;
+    }
+    .customizer-container {
+      width: 90%;
+      max-width: 500px;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .customizer-container h2 {
+      text-align: center;
+    }
+    .customizer-container label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .customizer-container input, .customizer-container select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .customizer-container button {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .customizer-container button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="customizer-container">
+    <h2>Chatbot Customizer</h2>
+    <label for="bot-title">Bot Title:</label>
+    <input type="text" id="bot-title" placeholder="Enter bot title...">
+    <label for="system-prompt">System Prompt:</label>
+    <input type="text" id="system-prompt" placeholder="Enter system prompt...">
+    <label for="header-color">Header Color:</label>
+    <input type="color" id="header-color" value="#4CAF50">
+    <label for="bot-color">Assistant Message Color:</label>
+    <input type="color" id="bot-color" value="#e1f5fe">
+    <label for="user-color">User Message Color:</label>
+    <input type="color" id="user-color" value="#dcedc8">
+    <label for="button-color">Send Button Color:</label>
+    <input type="color" id="button-color" value="#4CAF50">
+    <button onclick="createChatbot()">Create Chatbot</button>
+  </div>
+
+  <script>
+    async function createChatbot() {
+      const title = document.getElementById('bot-title').value;
+      const systemPrompt = document.getElementById('system-prompt').value;
+      const headerColor = document.getElementById('header-color').value;
+      const botColor = document.getElementById('bot-color').value;
+      const userColor = document.getElementById('user-color').value;
+      const buttonColor = document.getElementById('button-color').value;
+
+      const response = await fetch('/.netlify/functions/createChatbot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title, systemPrompt, headerColor, botColor, userColor, buttonColor })
+      });
+
+      const data = await response.json();
+      alert(`Your chatbot is available at: ${data.url}`);
+    }
+  </script>
+</body>
+</html>
