@@ -3,6 +3,17 @@ const archiver = require('archiver');
 const streamBuffers = require('stream-buffers');
 const fs = require('fs');
 const path = require('path');
+const admin = require('firebase-admin');
+
+// Initialize Firebase Admin SDK
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    databaseURL: 'https://<your-database-name>.firebaseio.com'
+  });
+}
+
+const db = admin.firestore();
 
 exports.handler = async (event, context) => {
   const { title, systemPrompt, headerColor, botColor, userColor, buttonColor } = JSON.parse(event.body);
@@ -21,9 +32,23 @@ exports.handler = async (event, context) => {
   const archive = createZipArchive({ 'index.html': botPageHtml });
   const response = await deployToNetlify(archive);
 
+  const url = response.deploy_ssl_url;
+
+  // Save URL to Firestore
+  await db.collection('chatbots').add({
+    title,
+    systemPrompt,
+    headerColor,
+    botColor,
+    userColor,
+    buttonColor,
+    url,
+    createdAt: admin.firestore.FieldValue.serverTimestamp()
+  });
+
   return {
     statusCode: 200,
-    body: JSON.stringify({ url: response.deploy_ssl_url })
+    body: JSON.stringify({ url })
   };
 };
 
