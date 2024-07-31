@@ -1,0 +1,17 @@
+{
+  "name": "chatbot-customizer",
+  "version": "1.0.0",
+  "description": "A customizable chatbot generator with Netlify deployment",
+  "main": "index.js",
+  "scripts": {
+    "start": "netlify dev",
+    "build": "netlify build"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "archiver": "^5.3.0",
+    "stream-buffers": "^3.0.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
